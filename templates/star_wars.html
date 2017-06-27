@@ -5,11 +5,25 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
         <script src="{{ url_for('static', filename='app.js') }}"></script>
         <title>The World of Star Wars</title>
     </head>
     <body>
-        <div class="container">
+        <div class="container" id="buttons">
+            
+            <form action="{{ url_for('planets') }}" id="prev" name="url" method="POST">
+                <input type="text" name="url" value="{{ prev_page }}" id="prev_page" hidden>
+                <input class="btn btn-primary" type="submit" value="Prev">
+            </form>
+
+            <form action="{{ url_for('planets') }}" id="next" name="url" method="POST">
+                <input type="text" name="url" value="{{ next_page }}" id="next_page" hidden>
+                <input class="btn btn-primary" type="submit" value="Next">
+            </form>
+
+        </div>
+        <div class="container" id="planet-table">
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -26,7 +40,11 @@
                     {% for planet in planets %}
                     <tr>
                         <td>{{ planet.name }}</td>
+                        {% if planet.diameter != "0" and planet.diameter != 'unknown' %}
                         <td>{{ '{:.3f}'.format(int(planet.diameter)/1000) }} km</td>
+                        {% else %}
+                        <td>{{ 0 }} km</td>
+                        {% endif %}
                         <td>{{ planet.climate }}</td>
                         <td>{{ planet.terrain }}</td>
                         <td>{{ planet.surface_water }}</td>
