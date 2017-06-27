@@ -26,11 +26,17 @@
                     {% for planet in planets %}
                     <tr>
                         <td>{{ planet.name }}</td>
-                        <td>{{ planet.diameter }}</td>
+                        <td>{{ '{:.3f}'.format(int(planet.diameter)/1000) }} km</td>
                         <td>{{ planet.climate }}</td>
                         <td>{{ planet.terrain }}</td>
                         <td>{{ planet.surface_water }}</td>
+                        
+                        {% if planet.population != 'unknown' %}
+                        <td>{{ '{:,}'.format(int(planet.population)) }} people</td>
+                        {% else %}
                         <td>{{ planet.population }}</td>
+                        {% endif %}
+
                         {% if planet.residents %}
                         <td>{{ len(planet.residents) }}</td>
                         {% else %}
