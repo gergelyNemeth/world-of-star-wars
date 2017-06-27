@@ -7,8 +7,8 @@ app = Flask(__name__)
 @app.route('/')
 def root():
     response = requests.get('https://swapi.co/api/planets/').json()
-    print(response)
-    return render_template("star_wars.html")
+    planets = response["results"]
+    return render_template("star_wars.html", planets=planets, len=len)
 
 
 if __name__ == '__main__':
