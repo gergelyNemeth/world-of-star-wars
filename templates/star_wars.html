@@ -6,7 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
-        <script src="{{ url_for('static', filename='app.js') }}"></script>
+        <script src="{{ url_for('static', filename='app.js') }}" defer></script>
         <title>The World of Star Wars</title>
     </head>
     <body>
@@ -49,7 +49,12 @@
                         {% endif %}
                         <td>{{ planet.climate }}</td>
                         <td>{{ planet.terrain }}</td>
+
+                        {% if planet.surface_water != "unknown"%}
+                        <td>{{ planet.surface_water }} %</td>
+                        {% else %}
                         <td>{{ planet.surface_water }}</td>
+                        {% endif %}
                         
                         {% if planet.population != 'unknown' %}
                         <td>{{ '{:,}'.format(int(planet.population)) }} people</td>
@@ -58,7 +63,7 @@
                         {% endif %}
 
                         {% if planet.residents %}
-                        <td>{{ len(planet.residents) }}</td>
+                        <td><button class="btn btn-default residents" data-toggle="modal" data-target="#myModal" id="{{ planet.name }}-residents">{{ len(planet.residents) }} resident{% if len(planet.residents) > 1 %}s{% endif %}</button></td>
                         {% else %}
                         <td>No known residents</td>
                         {% endif %}
@@ -66,7 +71,8 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </div>        
+        </div>
+        
         
     </body>
 </html>
