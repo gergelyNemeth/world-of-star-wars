@@ -42,8 +42,10 @@
                         <td>{{ planet.name }}</td>
                         {% if planet.diameter != "0" and planet.diameter != 'unknown' %}
                         <td>{{ '{:.3f}'.format(int(planet.diameter)/1000) }} km</td>
-                        {% else %}
+                        {% elif planet.diameter == "0"%}
                         <td>{{ 0 }} km</td>
+                        {% elif planet.diameter == "unknown" %}
+                        <td>{{ planet.diameter }}</td>
                         {% endif %}
                         <td>{{ planet.climate }}</td>
                         <td>{{ planet.terrain }}</td>
