@@ -1,15 +1,16 @@
 import os
 import psycopg2
 import urllib
-from database_settings import db_settings
+
+if not os.environ.get('HEROKU'):
+    from database_settings import db_settings
 
 
 def connect_database():
     try:
-        if os.environ.get('https://data.heroku.com/datastores/7e0ef83c-9036-4b7f-83b4-e53f195186dc'):
+        if os.environ.get('DATABASE_URL'):
             urllib.parse.uses_netloc.append('postgres')
-            url = urllib.parse.urlparse(os.environ.get(
-                'https://data.heroku.com/datastores/7e0ef83c-9036-4b7f-83b4-e53f195186dc'))
+            url = urllib.parse.urlparse(os.environ.get('DATABASE_URL'))
             conn = psycopg2.connect(
                 database=url.path[1:],
                 user=url.username,
