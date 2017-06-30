@@ -1,8 +1,11 @@
 form {
     display: inline;
 }
-
-#buttons, 
+.btn,
 #planet-table {
     margin-top: 1em;
+}
+
+h1 {
+    margin-top: 0;
 }
