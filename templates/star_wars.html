@@ -25,9 +25,13 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="/">Planet List</a></li>
+                        {% if login_status == False %}
                         <li><a href="/registration">Registration</a></li>
                         <li><a href="/login">Login</a></li>
+                        {% endif %}
+                        {% if login_status == True %}
                         <li><a href="/logout">Logout</a></li>
+                        {% endif %}
                     </ul>
                     <ul class="nav navbar-nav navbar-right ">
                         <li class="navbar-text">{{ login_message }}</li>
