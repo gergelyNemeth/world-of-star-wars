@@ -102,3 +102,6 @@ ENV/
 
 # vscode folder
 .vscode
+
+# database settings
+database_settings.py
