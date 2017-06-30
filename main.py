@@ -23,7 +23,7 @@ def planets(url="https://swapi.co/api/planets/"):
                            login_message=login_message, login_status=login_status)
 
 
-@app.route('/registration', methods=['GET', 'POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def registration():
     login_message, login_status = session_status()
     if request.method == 'POST':
