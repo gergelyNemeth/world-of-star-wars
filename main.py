@@ -9,11 +9,7 @@ app.secret_key = '\xbd\x82\x83\xcf\xda}{\xff\xd5\xb8\n\x0cs\xe4\x8e\nU\xfc5\xec0
 
 @app.route('/', methods=["GET", "POST"])
 def planets(url="https://swapi.co/api/planets/"):
-    if 'username' in session:
-        login_message = 'Signed in as {}'.format(session['username'])
-    else:
-        login_message = 'You are not signed in'
-
+    login_message = session_status()
     if request.method == "POST":
         if request.form['url'] != "None":
             url = request.form['url']
@@ -28,6 +24,7 @@ def planets(url="https://swapi.co/api/planets/"):
 
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
+    login_message = session_status()
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -35,11 +32,13 @@ def registration():
         pass_hash = werkzeug.security.generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
         data_manager.write_user(username, pass_hash)
         return redirect(url_for('planets'))
-    return render_template("register_login.html", form="register")
+
+    return render_template("register_login.html", form="register", login_message=login_message)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    login_message = session_status()
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -52,7 +51,8 @@ def login():
                 return 'Wrong password.'
         else:
             return 'You did not register yet.'
-    return render_template("register_login.html", form="login")
+
+    return render_template("register_login.html", form="login", login_message=login_message)
 
 
 @app.route('/logout')
@@ -60,6 +60,16 @@ def logout():
     # remove the username from the session if it's there
     session.pop('username', None)
     return redirect(url_for('planets'))
+
+
+def session_status():
+    if 'username' in session:
+        login_message = 'Logged in as {}'.format(session['username'])
+    else:
+        login_message = 'You are not logged in'
+
+    return login_message
+
 
 if __name__ == '__main__':
     app.run(debug=True)
