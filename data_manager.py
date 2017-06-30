@@ -1,18 +1,33 @@
+import os
 import psycopg2
-
+import urllib
 from database_settings import db_settings
 
 
 def connect_database():
     try:
-        # setup connection string
-        connect_str = "dbname={} user={} host='localhost'".format(db_settings()['dbname'], db_settings()['user'])
-        # use our connection values to establish a connection
-        conn = psycopg2.connect(connect_str)
-        # set autocommit option, to do every query when we call it
-        conn.autocommit = True
-        # create a psycopg2 cursor that can execute queries
+        if os.environ.get('https://data.heroku.com/datastores/7e0ef83c-9036-4b7f-83b4-e53f195186dc'):
+            urllib.parse.uses_netloc.append('postgres')
+            url = urllib.parse.urlparse(os.environ.get(
+                'https://data.heroku.com/datastores/7e0ef83c-9036-4b7f-83b4-e53f195186dc'))
+            conn = psycopg2.connect(
+                database=url.path[1:],
+                user=url.username,
+                password=url.password,
+                host=url.hostname,
+                port=url.port
+            )
+        else:
+            # setup connection string
+            connect_str = "dbname={} user={} host='localhost'".format(db_settings()['dbname'], db_settings()['user'])
+            # use our connection values to establish a connection
+            conn = psycopg2.connect(connect_str)
+            # set autocommit option, to do every query when we call it
+            conn.autocommit = True
+            # create a psycopg2 cursor that can execute queries
+
         cursor = conn.cursor()
+
     except Exception as e:
         print("Uh oh, can't connect. Invalid dbname, user or password?")
         print(e)

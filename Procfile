@@ -1,1 +1,1 @@
-web: gunicorn app:world-of-star-wars-ng
+web: gunicorn main:app
