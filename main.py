@@ -13,10 +13,14 @@ def planets(url="https://swapi.co/api/planets/"):
     if request.method == "POST":
         if request.form['url'] != "None":
             url = request.form['url']
-    response = requests.get(url).json()
-    planets = response["results"]
-    prev_page = response["previous"]
-    next_page = response["next"]
+    try:
+        response = requests.get(url).json()
+        planets = response["results"]
+        prev_page = response["previous"]
+        next_page = response["next"]
+    except requests.exceptions.ConnectionError as e:
+        print(e)
+        return "Connection Error: " + str(e) + "<br>Try to refresh the page"
 
     return render_template("star_wars.html", planets=planets, len=len, int=int, format=format,
                            prev_page=prev_page, next_page=next_page,
@@ -35,7 +39,7 @@ def registration():
         return redirect(url_for('planets'))
 
     return render_template("register_login.html", form="register",
-                           login_message=login_message, login_status=login_status)
+                           login_message=login_message)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -54,7 +58,8 @@ def login():
         else:
             return 'You did not register yet.'
 
-    return render_template("register_login.html", form="login", login_message=login_message)
+    return render_template("register_login.html", form="login",
+                           login_message=login_message)
 
 
 @app.route('/logout')
