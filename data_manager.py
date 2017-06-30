@@ -2,13 +2,13 @@ import os
 import psycopg2
 import urllib
 
-if not os.environ.get('HEROKU'):
-    from database_settings import db_settings
+# if not os.environ.get('HEROKU'):
+#     from database_settings import db_settings
 
 
 def connect_database():
     try:
-        if os.environ.get('DATABASE_URL'):
+        if os.environ.get('HEROKU'):
             urllib.parse.uses_netloc.append('postgres')
             url = urllib.parse.urlparse(os.environ.get('DATABASE_URL'))
             conn = psycopg2.connect(
