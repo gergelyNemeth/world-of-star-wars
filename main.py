@@ -13,6 +13,9 @@ def planets(url="https://swapi.co/api/planets/"):
     if request.method == "POST":
         if request.form['url'] != "None":
             url = request.form['url']
+            if url.startswith('http://'):
+                url = url.replace('http://', 'https://', 1)
+
     try:
         response = requests.get(url).json()
         planets = response["results"]
