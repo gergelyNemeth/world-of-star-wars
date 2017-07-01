@@ -5,15 +5,24 @@ import urllib
 
 def connect_database():
     try:
-        urllib.parse.uses_netloc.append('postgres')
-        url = urllib.parse.urlparse(os.environ.get('DATABASE_URL'))
-        conn = psycopg2.connect(
-            database=url.path[1:],
-            user=url.username,
-            password=url.password,
-            host=url.hostname,
-            port=url.port
-        )
+        # heroku
+        if 'DYNO' in os.environ:
+            urllib.parse.uses_netloc.append('postgres')
+            url = urllib.parse.urlparse(os.environ.get('DATABASE_URL'))
+            conn = psycopg2.connect(
+                database=url.path[1:],
+                user=url.username,
+                password=url.password,
+                host=url.hostname,
+                port=url.port
+            )
+        # localhost
+        else:
+            # setup connection string
+            connect_str = "dbname='gergo' user='gergo' host='localhost'"
+            # use our connection values to establish a connection
+            conn = psycopg2.connect(connect_str)
+
         conn.autocommit = True
         # create a psycopg2 cursor that can execute queries
         cursor = conn.cursor()
