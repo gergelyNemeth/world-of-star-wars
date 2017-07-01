@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import requests
 import data_manager
 import werkzeug.security
+import os
 
 app = Flask(__name__)
 app.secret_key = '\xbd\x82\x83\xcf\xda}{\xff\xd5\xb8\n\x0cs\xe4\x8e\nU\xfc5\xec0$k\xcc'
@@ -13,7 +14,7 @@ def planets(url="https://swapi.co/api/planets/"):
     if request.method == "POST":
         if request.form['url'] != "None":
             url = request.form['url']
-            if url.startswith('http:'):
+            if url.startswith('http://'):
                 url = url.replace('http://', 'https://', 1)
     try:
         response = requests.get(url).json()
@@ -84,4 +85,8 @@ def session_status():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    if 'DYNO' in os.environ:
+        app.debug = False
+    else:
+        app.debug = True
+    app.run()

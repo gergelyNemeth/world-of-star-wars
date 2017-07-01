@@ -1,18 +1,32 @@
+import os
 import psycopg2
-
-from database_settings import db_settings
+import urllib
 
 
 def connect_database():
     try:
-        # setup connection string
-        connect_str = "dbname={} user={} host='localhost'".format(db_settings()['dbname'], db_settings()['user'])
-        # use our connection values to establish a connection
-        conn = psycopg2.connect(connect_str)
-        # set autocommit option, to do every query when we call it
+        # heroku
+        if 'DYNO' in os.environ:
+            urllib.parse.uses_netloc.append('postgres')
+            url = urllib.parse.urlparse(os.environ.get('DATABASE_URL'))
+            conn = psycopg2.connect(
+                database=url.path[1:],
+                user=url.username,
+                password=url.password,
+                host=url.hostname,
+                port=url.port
+            )
+        # localhost
+        else:
+            # setup connection string
+            connect_str = "dbname='gergo' user='gergo' host='localhost'"
+            # use our connection values to establish a connection
+            conn = psycopg2.connect(connect_str)
+
         conn.autocommit = True
         # create a psycopg2 cursor that can execute queries
         cursor = conn.cursor()
+
     except Exception as e:
         print("Uh oh, can't connect. Invalid dbname, user or password?")
         print(e)
