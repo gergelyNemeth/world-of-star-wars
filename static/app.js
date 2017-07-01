@@ -31,6 +31,7 @@ $(document).ready(function(){
             var keyList = ['name', 'height', 'mass', 'skin_color', 'hair_color', 'eye_color', 'birth_year', 'gender'] 
             var items = '';
             $.each(data.residents, function(key, val) {
+                val = val.replace('http://', 'https://');
                 $.getJSON(val, function(data){
                     $.each(data, function(key, val){
                         if ($.inArray(key, keyList) > -1) {
