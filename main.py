@@ -8,6 +8,15 @@ app = Flask(__name__)
 app.secret_key = '\xbd\x82\x83\xcf\xda}{\xff\xd5\xb8\n\x0cs\xe4\x8e\nU\xfc5\xec0$k\xcc'
 
 
+@app.before_request
+def make_session_permanent():
+    """Makes session permanent, set session lifetime to 5 minutes, refresh upon each request."""
+
+    if 'user_name' in session:
+        session.permanent = True
+        app.permanent_session_lifetime = timedelta(minutes=5)
+
+
 @app.route('/', methods=["GET", "POST"])
 def planets(url="https://swapi.co/api/planets/"):
     login_message, login_status = session_status()
