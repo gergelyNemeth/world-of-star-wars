@@ -1,8 +1,8 @@
 $(document).ready(function(){
-    $('.residents').on('click', function(e){
-        var planetName = e.target.dataset.planet;
-        var planetUrl = e.target.dataset.url.replace('http://', 'https://');
-        $('#planetResidents').on('show.bs.modal', function(e){
+    $('.residents').on('click', function(event){
+        var planetName = event.target.dataset.planet;
+        var planetUrl = event.target.dataset.url.replace('http://', 'https://');
+        $('#planetResidents').on('show.bs.modal', function(event){
             $('.modal-title').text('Residents of ' + planetName);
         })
         
@@ -20,7 +20,8 @@ $(document).ready(function(){
                 </tr>
             </thead>`;
         var residentsTable = modalTableHeader + '<tbody id="modal-content"></tbody>'
-        $('.modal-body').children().detach(); /* remove content if exists*/
+        /* remove content if exists*/
+        $('.modal-body').children().detach();
         $('<table>', {
             'class': 'table table-bordered',
             'id': 'residentsTable',
@@ -30,18 +31,26 @@ $(document).ready(function(){
         $.getJSON(planetUrl, function(data){
             var keyList = ['name', 'height', 'mass', 'skin_color', 'hair_color', 'eye_color', 'birth_year', 'gender'] 
             var items = '';
-            $.each(data.residents, function(key, val) {
-                val = val.replace('http://', 'https://');
-                $.getJSON(val, function(data){
-                    $.each(data, function(key, val){
+
+            $('<div>', {
+                class: 'container',
+                id: 'loading',
+                html: 'Loading...'
+            }).appendTo('.modal-body')
+
+            $.each(data.residents, function(key, value) {
+                value = value.replace('http://', 'https://');
+                $.getJSON(value, function(data){
+                    $('#loading').remove()
+                    $.each(data, function(key, value){
                         if ($.inArray(key, keyList) > -1) {
                             if (key === 'height') {
-                                val = parseFloat(Number(val) / 100) + ' m';
+                                value = parseFloat(Number(value) / 100) + ' m';
                             }
-                            if (key === 'mass' && val !== 'unknown') {
-                                val += ' kg'
+                            if (key === 'mass' && value !== 'unknown') {
+                                value += ' kg'
                             }
-                            items += ('<td>' + val + '</td>');
+                            items += ('<td>' + value + '</td>');
                         }
                     })
                     $('<tr>', {
