@@ -48,3 +48,6 @@ h1 {
     color: red;
 }
 
+.btn.residents {
+    line-height: 1em;
+}
