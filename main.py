@@ -39,39 +39,53 @@ def planets(url="https://swapi.co/api/planets/"):
                            login_message=login_message, login_status=login_status)
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/registration', methods=['GET', 'POST'])
 def registration():
     login_message, login_status = session_status()
+    error_message = ""
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        session['username'] = username
-        pass_hash = werkzeug.security.generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
-        data_manager.write_user(username, pass_hash)
-        return redirect(url_for('planets'))
+        username_exists = data_manager.check_username_exists(username)
+        if not username_exists:
+            if len(username) >= 3 and len(password) >= 6:
+                session['username'] = username
+                pass_hash = werkzeug.security.generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
+                data_manager.write_user(username, pass_hash)
+                return redirect(url_for('planets'))
+            elif len(username) < 3:
+                error_message = "Too short username. It should be minimum 3 character"
+            elif len(password) < 6:
+                error_message = "Too short password. It should be minimum 6 character"
 
-    return render_template("register_login.html", form="register",
-                           login_message=login_message)
+        else:
+            error_message = "This username exists. Choose another one."
+
+    return render_template("register_login.html", form="registration",
+                           login_message=login_message, error_message=error_message)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     login_message, login_status = session_status()
+    error_message = ""
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        pass_hash_data = data_manager.read_user_password(username)
-        if pass_hash_data:
-            if werkzeug.security.check_password_hash(pass_hash_data, password):
-                session['username'] = username
-                return redirect(url_for('planets'))
-            else:
-                return 'Wrong password.'
+        username_exists = data_manager.check_username_exists(username)
+        if username_exists:
+            pass_hash_data = data_manager.read_user_password(username)
+            if pass_hash_data:
+                if werkzeug.security.check_password_hash(pass_hash_data, password):
+                    session['username'] = username
+                    return redirect(url_for('planets'))
+                else:
+                    error_message = "Wrong password."
         else:
-            return 'You did not register yet.'
+            error_message = "You did not register yet."
 
     return render_template("register_login.html", form="login",
-                           login_message=login_message)
+                           login_message=login_message, error_message=error_message)
 
 
 @app.route('/logout')

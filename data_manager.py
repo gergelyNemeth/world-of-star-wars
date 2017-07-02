@@ -71,3 +71,14 @@ def read_user_password(username):
     if pass_hash_data:
         return pass_hash_data
     return
+
+
+def check_username_exists(username):
+    username_in_db = read_query("""SELECT username FROM public.user WHERE username = %s;""", (username,))
+    print(username_in_db)
+    if username_in_db:
+        result = True
+    else:
+        result = False
+
+    return result

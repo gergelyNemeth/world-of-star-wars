@@ -26,7 +26,7 @@
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="/">Planet List</a></li>
-                        <li {% if form == "register" %}class="active"{% endif %}><a href="/register" >Register</a></li>
+                        <li {% if form == "registration" %}class="active"{% endif %}><a href="/registration" >Registration</a></li>
                         <li {% if form == "login" %}class="active"{% endif %}><a href="/login">Login</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right ">
@@ -36,26 +36,36 @@
             </div>
         </nav>
         <div class="container">
-            <h1>Star Wars Universe Planets</h1>
+            <div class="card card-container">
+                <div class="row">
+                    <div class="col-sm-4 col-sm-offset-4">
+                        {% if form == "registration" %}
+                        <form class="form-signin" id="register-form" method="post">
+                            <p><input class="form-control" type="text" name="username" placeholder="Username" required autofocus></p>
+                            <p><input class="form-control" type="password" name="password" placeholder="Password" required></p>
+                            <p><input class="btn btn-primary btn-block btn-signin" type="submit" value="Sign Up"></p>
+                        </form>
+                        {% endif %}
 
-            {% if form == "register" %}
-            <form class="form" id="register-form" method="post">
-                <p><input type="text" name="username" autofocus placeholder="Username"></p>
-                <p><input type="password" name="password" placeholder="Password"></p>
-                <p><input class="btn btn-primary" type="submit" value="Register"></p>
-            </form>
-            {% endif %}
+                        {% if form == "login" %}
+                        <form class="form-signin" id="login-form" method="post">
+                            <p><input class="form-control" type="text" name="username" placeholder="Username" required autofocus></p>
+                            <p><input class="form-control" type="password" name="password" placeholder="Password" required></p>
+                            <p><input class="btn btn-primary btn-block btn-signin" type="submit" value="Sign in"></p>
+                        </form>
+                        {% endif %}
 
-            {% if form == "login" %}
-            <form class="form" id="login-form" method="post">
-                <p><input type="text" name="username" autofocus placeholder="Username"></p>
-                <p><input type="password" name="password" placeholder="Password"></p>
-                <p><input class="btn btn-primary" type="submit" value="Login"></p>
-            </form>
-            {% endif %}
+                        <a href="{{ url_for('planets') }}" class="btn btn-default btn-block cancel" id="cancel-button">Cancel</a>
 
-            <a href="{{ url_for('planets') }}" class="btn btn-default cancel">Cancel</a>
-            
+                        {% if error_message %}
+                        <p class="error-message">{{ error_message }}</p>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     </body>
 </html>
