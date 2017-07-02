@@ -12,6 +12,10 @@ h1 {
     margin-bottom: 0.5em;
 }
 
+#residents-table {
+    margin-bottom: 0;
+}
+
 .card-container.card {
     padding: 40px 40px;
 }
