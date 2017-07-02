@@ -39,6 +39,7 @@
                 </div><!--/.nav-collapse -->
             </div>
         </nav>
+        {% if not error_message %}
         <div class="container" id="buttons">
 
             <h1>Star Wars Universe Planets</h1>
@@ -119,6 +120,10 @@
                 </div>
             </div>
         </div>
+        {% else %}
+        <div class="error_message">{{ error_message }}<div>
+        {% endif %}
+
         
     </body>
 </html>

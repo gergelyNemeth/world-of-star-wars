@@ -21,6 +21,7 @@ def make_session_permanent():
 @app.route('/', methods=["GET", "POST"])
 def planets(url="https://swapi.co/api/planets/"):
     login_message, login_status = session_status()
+    error_message = ''
     if request.method == "POST":
         if request.form['url'] != "None":
             url = request.form['url']
@@ -33,11 +34,12 @@ def planets(url="https://swapi.co/api/planets/"):
         next_page = response["next"]
     except requests.exceptions.ConnectionError as e:
         print(e)
-        return "Connection Error: " + str(e) + "<br>Try to refresh the page"
+        planets = prev_page = next_page = ''
+        error_message = "Connection Error. Check your internet connection or try to refresh the page."
 
     return render_template("star_wars.html", planets=planets, len=len, int=int, format=format,
                            prev_page=prev_page, next_page=next_page,
-                           login_message=login_message, login_status=login_status)
+                           login_message=login_message, login_status=login_status, error_message=error_message)
 
 
 @app.route('/registration', methods=['GET', 'POST'])
