@@ -3,6 +3,7 @@ import requests
 import data_manager
 import werkzeug.security
 import os
+from datetime import timedelta
 
 app = Flask(__name__)
 app.secret_key = '\xbd\x82\x83\xcf\xda}{\xff\xd5\xb8\n\x0cs\xe4\x8e\nU\xfc5\xec0$k\xcc'
@@ -12,9 +13,9 @@ app.secret_key = '\xbd\x82\x83\xcf\xda}{\xff\xd5\xb8\n\x0cs\xe4\x8e\nU\xfc5\xec0
 def make_session_permanent():
     """Makes session permanent, set session lifetime to 5 minutes, refresh upon each request."""
 
-    if 'user_name' in session:
+    if 'username' in session:
         session.permanent = True
-        app.permanent_session_lifetime = timedelta(minutes=5)
+        app.permanent_session_lifetime = timedelta(minutes=10)
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -90,7 +91,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    # remove the username from the session if it's there
+    # Remove the username from the session if it's there
     session.pop('username', None)
     return redirect(url_for('planets'))
 
